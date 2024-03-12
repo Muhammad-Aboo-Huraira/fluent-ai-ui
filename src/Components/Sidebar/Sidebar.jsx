@@ -28,9 +28,13 @@ import SelectedCustomers from "../../assets/selcustomers.png";
 import UnSelectedCustomers from "../../assets/unselcustomers.png";
 import SelectedPartners from "../../assets/Vector-13.png";
 import UnSelectedPartners from "../../assets/Vector-14.png";
-import Avatar from "@mui/material/Avatar"; // Import Avatar component from MUI
+import Logout from "../../assets/loggedout.png";
+import NotificationIcon from "../../assets/style=fill.png";
+import ProfileIcon from "../../assets/Ellipse 9.png";
+import Avatar from "@mui/material/Avatar";
 import { ThemeProvider } from "@emotion/react";
 import { useNavigate } from "react-router";
+import { useEffect } from "react";
 
 const fontTheme = createTheme({
   typography: {
@@ -88,8 +92,19 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function Sidebar({ data }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
-  const [selectedOption, setSelectedOption] = useState("Dashboard"); // State variable to track selected option
+  const [selectedOption, setSelectedOption] = useState(""); // State variable to track selected option
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedSelectedOption = localStorage.getItem("selectedOption");
+    if (storedSelectedOption) {
+      setSelectedOption(storedSelectedOption);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("selectedOption", selectedOption);
+  }, [selectedOption]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -128,7 +143,7 @@ export default function Sidebar({ data }) {
         ) : (
           <Avatar
             src={UnSelectedCouponIcon}
-            sx={{ height: 20, width: 20, borderRadius: 0 }}
+            sx={{ height: 18, width: 20, borderRadius: 0 }}
           />
         ),
       path: "/generatecoupons",
@@ -173,6 +188,7 @@ export default function Sidebar({ data }) {
     navigate(path);
   };
 
+
   return (
     <ThemeProvider theme={fontTheme}>
       <Box sx={{ display: "flex" }}>
@@ -196,6 +212,25 @@ export default function Sidebar({ data }) {
             >
               {selectedOption === "/" ? "Dashboard" : selectedOption}
             </Typography>
+            {/* Add your icons here */}
+            <IconButton>
+            <Avatar
+            src={Logout}
+            sx={{ height: 20, width: 20, borderRadius: 0 }}
+          />
+            </IconButton>
+            <IconButton >
+            <Avatar
+            src={NotificationIcon}
+            sx={{ height: 20, width: 20, borderRadius: 0 }}
+          />
+            </IconButton>
+            <IconButton>
+            <Avatar
+            src={ProfileIcon}
+            sx={{ height: 20, width: 20, borderRadius: 0 }}
+          />
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -233,9 +268,9 @@ export default function Sidebar({ data }) {
           </DrawerHeader>
           <List>
             {sidebarData.map((item, index) => (
-              <Box sx={{ margin: "20px" }}>
+              <Box sx={{ margin: "20px" }} key={index}>
                 <ListItem
-                  key={item.text}
+                  key={item.index}
                   disablePadding
                   onClick={() => handleSidebarItemClick(item.text, item.path)} // Handle click event and update selected option
                 >
