@@ -19,47 +19,47 @@ import { useNavigate } from "react-router-dom";
 const CreatePartner = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState("");
-  const [campaignType, setcampaignType] = useState("Select Campaign Type");
-  const [location, setLocation] = useState("");
-  const [fee, setFee] = useState("");
+  const [partnerName, setPartnerName] = useState("");
+const [campaignType, setCampaignType] = useState("Select Campaign Type");
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
 
-      if (title === "" || description === "" || location === "" || fee === "") {
+if (partnerName === "" || campaignType === "") {
         enqueueSnackbar(`Please fill all the required fields`, {
           autoHideDuration: 3000,
           variant: "warning",
         });
-      } else if (/^\d/.test(title)) {
-        enqueueSnackbar(`Title should not start with a number`, {
+      } else if (/^\d/.test(partnerName)) {
+        enqueueSnackbar(`Name of partner should not start with a number`, {
           autoHideDuration: 3000,
           variant: "warning",
         });
-        return; // Stop execution if validation fails
-      } else if (/^\d/.test(description)) {
-        enqueueSnackbar(`Description should not start with a number`, {
-          autoHideDuration: 3000,
-          variant: "warning",
-        });
-        return; // Stop execution if validation fails
-      } else if (!/^[A-Za-z,\s]+$/.test(location)) {
-        enqueueSnackbar(
-          `Location should contain only alphabets, commas, and spaces`,
-          {
+        return;
+      }  else {
+        setLoading(true);
+        const objToSend = {
+          partnerName,
+          campaignType,
+        };
+        if (objToSend !== null) {
+          console.log(objToSend);
+          enqueueSnackbar(`Request submitted successfully`, {
             autoHideDuration: 3000,
-            variant: "warning",
-          }
-        );
-        return; // Stop execution if validation fails
-      } else if (fee < 0) {
-        enqueueSnackbar(`Fee should be greater than 0`, {
-          autoHideDuration: 3000,
-          variant: "warning",
-        });
-        return; // Stop execution if validation fails
+            variant: "success",
+          });
+          setPartnerName("")
+          setCampaignType("")
+          setLoading(false);
+          navigate("/");
+        } else {
+          setLoading(false);
+          enqueueSnackbar(`Request not submitted successfully`, {
+            autoHideDuration: 3000,
+            variant: "error",
+          });
+        }
       }
     } catch (error) {
       console.log(error);
@@ -151,12 +151,12 @@ const CreatePartner = () => {
                       },
                     },
                   }}
-                  placeholder="Title of Request"
+                  placeholder="Name of partner"
                   margin="normal"
                   autoComplete="off"
-                  value={title}
-                  onChange={(e) => setTitle(e?.target.value)}
-                  id="title"
+                  value={partnerName}
+                  onChange={(e) => setPartnerName(e?.target.value)}
+                  id="partnerName"
                   size="large"
                 />
               </Box>
@@ -195,11 +195,11 @@ const CreatePartner = () => {
                   margin="normal"
                   autoComplete="off"
                   value={campaignType}
-                  onChange={(e) => setDescription(e?.target.value)}
-                  id="description"
+                  onChange={(e) => setCampaignType(e?.target.value)}
+                  id="campaignType"
                   size="large"
                 >
-                  <MenuItem value="" selected disabled>Select Campaign Type</MenuItem>
+                  <MenuItem value="Select Campaign Type" selected disabled>Select Campaign Type</MenuItem>
                   <MenuItem value="Voucher">Voucher</MenuItem>
                   <MenuItem value="Coupon">Coupon</MenuItem>
                 </TextField>

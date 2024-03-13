@@ -19,49 +19,89 @@ import { useNavigate } from "react-router-dom";
 const Coupons = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState("");
-  const [campaignType, setcampaignType] = useState("Select Campaign Type");
-  const [location, setLocation] = useState("");
+  const [partnerName, setPartnerName] = useState("Select partner name");
+  const [productName, setProductName] = useState("Select product name");
   const [date, setDate] = useState("");
+  const [campaignName, setCampaignName] = useState("");
+  const [salesPersonName, setSalesPersonName] = useState("Select sale's person name");
+  const [retailPrice, setRetailPrice] = useState(0);
+  const [commission, setCommission] = useState(0);
+  const [percentOff, setPercentOff] = useState(0);
+  const [noOfCoupons, setNoOfCoupons] = useState(0);
+  const [currency, setCurrency] = useState("$");
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-
-      if (title === "" || description === "" || location === "" || fee === "") {
+      // Validation checks
+      if (
+        partnerName === "" ||
+        productName === "" ||
+        salesPersonName === "" ||
+        currency === "" ||
+        date === "" ||
+        campaignName === "" ||
+        retailPrice === "" ||
+        commission === "" ||
+        percentOff === "" ||
+        noOfCoupons === ""
+      ) {
         enqueueSnackbar(`Please fill all the required fields`, {
           autoHideDuration: 3000,
           variant: "warning",
         });
-      } else if (/^\d/.test(title)) {
-        enqueueSnackbar(`Title should not start with a number`, {
+      } else if (/^\d/.test(campaignName)) {
+        enqueueSnackbar(`name should not start with a number`, {
           autoHideDuration: 3000,
           variant: "warning",
         });
-        return; // Stop execution if validation fails
-      } else if (/^\d/.test(description)) {
-        enqueueSnackbar(`Description should not start with a number`, {
-          autoHideDuration: 3000,
-          variant: "warning",
-        });
-        return; // Stop execution if validation fails
-      } else if (!/^[A-Za-z,\s]+$/.test(location)) {
-        enqueueSnackbar(
-          `Location should contain only alphabets, commas, and spaces`,
-          {
+        return;
+      } else {
+        setLoading(true);
+        const objToSend = {
+          partnerName,
+          productName,
+          salesPersonName,
+          currency,
+          date,
+          campaignName,
+          retailPrice,
+          commission,
+          percentOff,
+          noOfCoupons,
+        };
+        if (objToSend !== null) {
+          console.log(objToSend);
+          enqueueSnackbar(`Request submitted successfully`, {
             autoHideDuration: 3000,
-            variant: "warning",
-          }
-        );
-        return; // Stop execution if validation fails
-      } else if (fee < 0) {
-        enqueueSnackbar(`Fee should be greater than 0`, {
-          autoHideDuration: 3000,
-          variant: "warning",
-        });
-        return; // Stop execution if validation fails
+            variant: "success",
+          });
+          setCampaignName("");
+          setPartnerName("");
+          setProductName("");
+          setSalesPersonName("");
+          setCurrency("");
+          setDate("");
+          setRetailPrice("");
+          setCommission("");
+          setPercentOff("");
+          setNoOfCoupons("");
+          setLoading(false);
+          navigate("/");
+        } else {
+          setLoading(false);
+          enqueueSnackbar(`Request not submitted successfully`, {
+            autoHideDuration: 3000,
+            variant: "error",
+          });
+        }
       }
     } catch (error) {
+      setLoading(false);
+      enqueueSnackbar(`Request not submitted successfully`, {
+        autoHideDuration: 3000,
+        variant: "error",
+      });
       console.log(error);
     }
   };
@@ -137,7 +177,7 @@ const Coupons = () => {
                   Partner Name
                 </InputLabel>
                 <TextField
-                select
+                  select
                   sx={{
                     mt: 1,
                     mb: 2,
@@ -153,14 +193,20 @@ const Coupons = () => {
                       },
                     },
                   }}
-                  placeholder="Title of Request"
+                  placeholder="Select partner name"
                   margin="normal"
                   autoComplete="off"
-                  value={title}
-                  onChange={(e) => setTitle(e?.target.value)}
-                  id="title"
+                  value={partnerName}
+                  onChange={(e) => setPartnerName(e?.target.value)}
+                  id="partnerName"
                   size="large"
-                />
+                >
+                  <MenuItem value="Select partner name" selected disabled>
+                    Select partner name
+                  </MenuItem>
+                  <MenuItem value="Huraira">Huraira</MenuItem>
+                  <MenuItem value="Usama">Usama</MenuItem>
+                </TextField>
               </Box>
               <Box
                 sx={{
@@ -193,17 +239,19 @@ const Coupons = () => {
                       },
                     },
                   }}
-                  placeholder="Select Campaign Type"
+                  placeholder="Select product name"
                   margin="normal"
                   autoComplete="off"
-                  value={campaignType}
-                  onChange={(e) => setDescription(e?.target.value)}
-                  id="description"
+                  value={productName}
+                  onChange={(e) => setProductName(e?.target.value)}
+                  id="productName"
                   size="large"
                 >
-                  <MenuItem value="" selected disabled>
-                    Select Product Name
-                  </MenuItem>
+                  <MenuItem value="Select product name" selected disabled>Select product name</MenuItem>
+                  <MenuItem value="Fluent Fast Monthly">Fluent Fast Monthly</MenuItem>
+                  <MenuItem value="Fluent Mastery Monthly">Fluent Mastery Monthly</MenuItem>
+                  <MenuItem value="Fluent Fast Yearly">Fluent Fast Yearly</MenuItem>
+                  <MenuItem value="Fluent Mastery Yearly">Fluent Mastery Yearly</MenuItem>
                 </TextField>
               </Box>
               <Box
@@ -239,14 +287,14 @@ const Coupons = () => {
                   }}
                   margin="normal"
                   autoComplete="off"
-                  value={campaignType}
-                  onChange={(e) => setDescription(e?.target.value)}
-                  id="description"
+                  value={date}
+                  onChange={(e) => setDate(e?.target.value)}
+                  id="date"
                   size="large"
                 />
               </Box>
             </Box>
-            
+
             <Box
               sx={{
                 display: "flex",
@@ -285,12 +333,12 @@ const Coupons = () => {
                       },
                     },
                   }}
-                  placeholder="Title of Request"
+                  placeholder="Enter coupon name"
                   margin="normal"
                   autoComplete="off"
-                  value={title}
-                  onChange={(e) => setTitle(e?.target.value)}
-                  id="title"
+                  value={campaignName}
+                  onChange={(e) => setCampaignName(e?.target.value)}
+                  id="campaignName"
                   size="large"
                 />
               </Box>
@@ -325,19 +373,19 @@ const Coupons = () => {
                       },
                     },
                   }}
-                  placeholder="Select Campaign Type"
+                  placeholder="Select sale's person name"
                   margin="normal"
                   autoComplete="off"
-                  value={campaignType}
-                  onChange={(e) => setDescription(e?.target.value)}
-                  id="description"
+                  value={salesPersonName}
+                  onChange={(e) => setSalesPersonName(e?.target.value)}
+                  id="salesPersonName"
                   size="large"
                 >
-                  <MenuItem value="" selected disabled>
-                    Select Campaign Type
+                  <MenuItem value="Select sale's person name" selected disabled>
+                    Select sale's person name
                   </MenuItem>
-                  <MenuItem value="Voucher">Voucher</MenuItem>
-                  <MenuItem value="Coupon">Coupon</MenuItem>
+                  <MenuItem value="Hasnain">Hasnain</MenuItem>
+                  <MenuItem value="Umer">Umer</MenuItem>
                 </TextField>
               </Box>
               <Box
@@ -355,7 +403,7 @@ const Coupons = () => {
                   Retail Price
                 </InputLabel>
                 <TextField
-                  select
+                  type="number"
                   sx={{
                     mt: 1,
                     mb: 2,
@@ -371,20 +419,14 @@ const Coupons = () => {
                       },
                     },
                   }}
-                  placeholder="Select Campaign Type"
                   margin="normal"
                   autoComplete="off"
-                  value={campaignType}
-                  onChange={(e) => setDescription(e?.target.value)}
-                  id="description"
+                  value={retailPrice}
+                  inputProps={{ min: 0 }}
+                  onChange={(e) => setRetailPrice(e?.target.value)}
+                  id="retailPrice"
                   size="large"
-                >
-                  <MenuItem value="" selected disabled>
-                    Select Campaign Type
-                  </MenuItem>
-                  <MenuItem value="Voucher">Voucher</MenuItem>
-                  <MenuItem value="Coupon">Coupon</MenuItem>
-                </TextField>
+                />
               </Box>
             </Box>
             <Box
@@ -426,12 +468,13 @@ const Coupons = () => {
                       },
                     },
                   }}
-                  placeholder="Title of Request"
                   margin="normal"
+                  type="number"
                   autoComplete="off"
-                  value={title}
-                  onChange={(e) => setTitle(e?.target.value)}
-                  id="title"
+                  value={commission}
+                  inputProps={{ min: 0 }}
+                  onChange={(e) => setCommission(e?.target.value)}
+                  id="commission"
                   size="large"
                 />
               </Box>
@@ -447,10 +490,9 @@ const Coupons = () => {
                     fontFamily: "Outfit",
                   }}
                 >
-                 Percent off (%)
+                  Percent off (%)
                 </InputLabel>
                 <TextField
-                  select
                   sx={{
                     mt: 1,
                     mb: 2,
@@ -466,20 +508,15 @@ const Coupons = () => {
                       },
                     },
                   }}
-                  placeholder="Select Campaign Type"
                   margin="normal"
                   autoComplete="off"
-                  value={campaignType}
-                  onChange={(e) => setDescription(e?.target.value)}
-                  id="description"
+                  value={percentOff}
+                  inputProps={{ min: 0 }}
+                  type="number"
+                  onChange={(e) => setPercentOff(e?.target.value)}
+                  id="percentOff"
                   size="large"
-                >
-                  <MenuItem value="" selected disabled>
-                    Select Campaign Type
-                  </MenuItem>
-                  <MenuItem value="Voucher">Voucher</MenuItem>
-                  <MenuItem value="Coupon">Coupon</MenuItem>
-                </TextField>
+                />
               </Box>
               <Box
                 sx={{
@@ -496,7 +533,6 @@ const Coupons = () => {
                   Number of coupons
                 </InputLabel>
                 <TextField
-                  select
                   sx={{
                     mt: 1,
                     mb: 2,
@@ -512,20 +548,15 @@ const Coupons = () => {
                       },
                     },
                   }}
-                  placeholder="Select Campaign Type"
                   margin="normal"
                   autoComplete="off"
-                  value={campaignType}
-                  onChange={(e) => setDescription(e?.target.value)}
-                  id="description"
+                  type="number"
+                  value={noOfCoupons}
+                  inputProps={{ min: 0 }}
+                  onChange={(e) => setNoOfCoupons(e?.target.value)}
+                  id="noOfCoupons"
                   size="large"
-                >
-                  <MenuItem value="" selected disabled>
-                    Select Campaign Type
-                  </MenuItem>
-                  <MenuItem value="Voucher">Voucher</MenuItem>
-                  <MenuItem value="Coupon">Coupon</MenuItem>
-                </TextField>
+                />
               </Box>
               <Box
                 sx={{
@@ -558,19 +589,18 @@ const Coupons = () => {
                       },
                     },
                   }}
-                  placeholder="Select Campaign Type"
                   margin="normal"
                   autoComplete="off"
-                  value={campaignType}
-                  onChange={(e) => setDescription(e?.target.value)}
+                  value={currency}
+                  onChange={(e) => setCurrency(e?.target.value)}
                   id="description"
                   size="large"
                 >
-                  <MenuItem value="" selected disabled>
+                  <MenuItem value="Select Currency" selected disabled>
                     Select Currency
                   </MenuItem>
-                  <MenuItem value="Dollar">$</MenuItem>
-                  <MenuItem value="Euro">€</MenuItem>
+                  <MenuItem value="$" selected>$</MenuItem>
+                  <MenuItem value="€">€</MenuItem>
                 </TextField>
               </Box>
             </Box>
@@ -601,7 +631,11 @@ const Coupons = () => {
                 ) : (
                   ""
                 )}
-                Generate <Avatar src={GenerateIcon} sx={{ borderRadius: 0, height: 15, width: 20, marginLeft: 2 }}/>
+                Generate{" "}
+                <Avatar
+                  src={GenerateIcon}
+                  sx={{ borderRadius: 0, height: 15, width: 20, marginLeft: 2 }}
+                />
               </Button>
             </Box>
           </Box>

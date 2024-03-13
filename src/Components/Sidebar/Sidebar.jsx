@@ -33,7 +33,7 @@ import NotificationIcon from "../../assets/style=fill.png";
 import ProfileIcon from "../../assets/Ellipse 9.png";
 import Avatar from "@mui/material/Avatar";
 import { ThemeProvider } from "@emotion/react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useEffect } from "react";
 
 const fontTheme = createTheme({
@@ -92,20 +92,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function Sidebar({ data }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
-  const [selectedOption, setSelectedOption] = useState(""); // State variable to track selected option
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedSelectedOption = localStorage.getItem("selectedOption");
-    if (storedSelectedOption) {
-      setSelectedOption(storedSelectedOption);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("selectedOption", selectedOption);
-  }, [selectedOption]);
-
+  const location = useLocation();
+  console.log(location.pathname);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -119,7 +108,7 @@ export default function Sidebar({ data }) {
     {
       text: "Dashboard",
       icon:
-        selectedOption === "Dashboard" ? (
+        location.pathname === "/" ? (
           <Avatar
             src={SelectedDashboardIcon}
             sx={{ height: 20, width: 20, borderRadius: 0 }}
@@ -135,7 +124,7 @@ export default function Sidebar({ data }) {
     {
       text: "Create Coupon",
       icon:
-        selectedOption === "Create Coupon" ? (
+        location.pathname === "/generatecoupons" ? (
           <Avatar
             src={SelectedCouponIcon}
             sx={{ height: 20, width: 20, borderRadius: 0 }}
@@ -151,7 +140,7 @@ export default function Sidebar({ data }) {
     {
       text: "Customers",
       icon:
-        selectedOption === "Customers" ? (
+        location.pathname === "/allcustomer" ? (
           <Avatar
             src={SelectedCustomers}
             sx={{ height: 20, width: 20, borderRadius: 0 }}
@@ -167,7 +156,7 @@ export default function Sidebar({ data }) {
     {
       text: "Create Partner",
       icon:
-        selectedOption === "Create Partner" ? (
+        location.pathname === "/createpartner" ? (
           <Avatar
             src={UnSelectedPartners}
             sx={{ height: 20, width: 20, borderRadius: 0 }}
@@ -183,11 +172,9 @@ export default function Sidebar({ data }) {
   ];
 
   // Function to handle click on sidebar item
-  const handleSidebarItemClick = (text, path) => {
-    setSelectedOption(text);
+  const handleSidebarItemClick = (path) => {
     navigate(path);
   };
-
 
   return (
     <ThemeProvider theme={fontTheme}>
@@ -208,28 +195,36 @@ export default function Sidebar({ data }) {
               variant="h6"
               noWrap
               component="div"
-              sx={{ color: "black" }}
+              sx={{ color: "black", flexGrow: 1 }}
             >
-              {selectedOption === "/" ? "Dashboard" : selectedOption}
+              {location.pathname === "/"
+                ? "Dashboard"
+                : location.pathname === "/generatecoupons"
+                ? "Create Coupon"
+                : location.pathname === "/allcustomer"
+                ? "Customers"
+                : location.pathname === "/createpartner"
+                ? "Create Partner"
+                : "Dashboard"}
             </Typography>
             {/* Add your icons here */}
             <IconButton>
-            <Avatar
-            src={Logout}
-            sx={{ height: 20, width: 20, borderRadius: 0 }}
-          />
-            </IconButton>
-            <IconButton >
-            <Avatar
-            src={NotificationIcon}
-            sx={{ height: 20, width: 20, borderRadius: 0 }}
-          />
+              <Avatar
+                src={Logout}
+                sx={{ height: 20, width: 20, borderRadius: 0 }}
+              />
             </IconButton>
             <IconButton>
-            <Avatar
-            src={ProfileIcon}
-            sx={{ height: 20, width: 20, borderRadius: 0 }}
-          />
+              <Avatar
+                src={NotificationIcon}
+                sx={{ height: 21, width: 18, borderRadius: 0 }}
+              />
+            </IconButton>
+            <IconButton>
+              <Avatar
+                src={ProfileIcon}
+                sx={{ height: 20, width: 20, borderRadius: 0 }}
+              />
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -272,31 +267,34 @@ export default function Sidebar({ data }) {
                 <ListItem
                   key={item.index}
                   disablePadding
-                  onClick={() => handleSidebarItemClick(item.text, item.path)} // Handle click event and update selected option
+                  onClick={() => handleSidebarItemClick(item.path)}
                 >
                   <ListItemButton
                     sx={{
                       backgroundColor:
-                        selectedOption === item.text ? "white" : "transparent",
+                        location.pathname === item.path
+                          ? "white"
+                          : "transparent",
                       "&:hover": {
                         backgroundColor:
-                          selectedOption === item.text
+                          location.pathname === item.path
                             ? "white"
                             : "rgba(255, 255, 255, 0.08)",
                       },
                       borderRadius: "10px",
                       boxShadow:
-                        selectedOption === item.text
+                        location.pathname === item.path
                           ? "2px 0px 10px rgba(0, 0, 0, 0.5)"
                           : "none",
                     }}
-                    onClick={() => handleSidebarItemClick(item.text, item.path)}
+                    onClick={() => handleSidebarItemClick(item.path)}
                   >
                     <ListItemIcon>{item.icon}</ListItemIcon>
                     <ListItemText
                       primary={item.text}
                       sx={{
-                        color: selectedOption === item.text ? "black" : "white",
+                        color:
+                          location.pathname === item.path ? "black" : "white",
                       }}
                     />
                   </ListItemButton>
