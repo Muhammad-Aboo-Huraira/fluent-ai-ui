@@ -94,7 +94,6 @@ export default function Sidebar({ data }) {
   const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.pathname);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -108,7 +107,7 @@ export default function Sidebar({ data }) {
     {
       text: "Dashboard",
       icon:
-        location.pathname === "/" ? (
+      (location.pathname === "/" || location.pathname === "/campaigns")? (
           <Avatar
             src={SelectedDashboardIcon}
             sx={{ height: 20, width: 20, borderRadius: 0 }}
@@ -272,18 +271,21 @@ export default function Sidebar({ data }) {
                   <ListItemButton
                     sx={{
                       backgroundColor:
-                        location.pathname === item.path
+                      location.pathname === item.path ||
+                      (location.pathname === "/campaigns" && item.path === "/")
                           ? "white"
                           : "transparent",
                       "&:hover": {
                         backgroundColor:
-                          location.pathname === item.path
+                        location.pathname === item.path ||
+                        (location.pathname === "/campaigns" && item.path === "/")
                             ? "white"
                             : "rgba(255, 255, 255, 0.08)",
                       },
                       borderRadius: "10px",
                       boxShadow:
-                        location.pathname === item.path
+                      location.pathname === item.path ||
+                      (location.pathname === "/campaigns" && item.path === "/")
                           ? "2px 0px 10px rgba(0, 0, 0, 0.5)"
                           : "none",
                     }}
@@ -294,7 +296,8 @@ export default function Sidebar({ data }) {
                       primary={item.text}
                       sx={{
                         color:
-                          location.pathname === item.path ? "black" : "white",
+                        location.pathname === item.path ||
+                        (location.pathname === "/campaigns" && item.path === "/") ? "black" : "white",
                       }}
                     />
                   </ListItemButton>

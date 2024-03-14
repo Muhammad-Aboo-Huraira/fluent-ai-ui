@@ -5,6 +5,10 @@ import arrowDown from "../../assets/Vector-15.png";
 import CSV from "../../assets/csv.png";
 import Tick from "../../assets/Vector-4.png";
 import Desh from "../../assets/Vector-7.png";
+import Customers from "../../assets/customers.png";
+import Revenue from "../../assets/revenue.png";
+import Campaigns from "../../assets/campaigns.png";
+import Partners from "../../assets/partners.png";
 import {
   Table,
   TableBody,
@@ -21,6 +25,8 @@ import {
   IconButton,
   Collapse,
   Button,
+  Avatar,
+  TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -61,7 +67,7 @@ function Row(props) {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate("/campaign");
+    navigate("/campaigns");
   };
   // rows content
   return (
@@ -180,15 +186,228 @@ const rows = [
   createData("Eclair", 262, 16.0, 24, 6.0, 3.79, 23),
   createData("Cupcake", 305, 3.7, 67, 4.3, 2.5, 23),
   createData("Gingerbread", 356, 16.0, 49, 3.9, 1.5, 23),
-  createData("Gingerbread", 356, 16.0, 49, 3.9, 1.5, 23),
-  createData("Gingerbread", 356, 16.0, 49, 3.9, 1.5, 23),
 ];
 
 export default function Dashboard() {
   let value = "";
   return (
     <div>
-      {/* Heading with button */}
+      
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexDirection: "row",
+          alignItems: "center",
+          backgroundColor: "#ECECEC",
+          color: "#0055FF",
+          my: 5,
+          py: 3,
+          gap: 5,
+          boxShadow:
+            " 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)",
+        }}
+      >
+        {/* 1st Div */}
+        <Box
+          sx={{
+            bgcolor: "white",
+            p: 1,
+            my: 1,
+            mx: 2,
+            borderRadius: "10px",
+            position: "relative",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 5,
+              margin: "10px",
+              padding: "0px 10px",
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                top: 15,
+                bottom: 10,
+                left: 20,
+                width: "1px",
+                height: "80%",
+                backgroundColor: "#8E8B8B ", // Adjust color as needed
+              }}
+            ></span>
+            <span>Total Customers</span>
+            <Avatar src={Customers} sx={{ borderRadius: 0, height: 25, width: 25 }} />
+          </div>
+          <Box sx={{ color: "black", ml: 3, display: "flex", gap: 5 }}>
+            Total <span>2348</span>
+          </Box>
+        </Box>
+        {/* 2nd Div */}
+        <Box
+          sx={{
+            bgcolor: "white",
+            p: 1,
+            my: 1,
+            mx: 2,
+            borderRadius: "10px",
+            position: "relative",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 5,
+              margin: "10px",
+              padding: "0px 10px",
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                top: 15,
+                bottom: 10,
+                left: 20,
+                width: "1px",
+                height: "80%",
+                backgroundColor: "#8E8B8B ", // Adjust color as needed
+              }}
+            ></span>
+            <span>Total Partners</span>
+            <Avatar src={Partners} sx={{ borderRadius: 0, height: 25, width: 25 }} />
+          </div>
+          <Box sx={{ color: "black", ml: 3, display: "flex", gap: 5 }}>
+            Total <span>2348</span>
+          </Box>
+        </Box>
+        {/* 3rd Div */}
+        <Box
+          sx={{
+            bgcolor: "white",
+            p: 1,
+            my: 1,
+            mx: 2,
+            borderRadius: "10px",
+            position: "relative",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 5,
+              margin: "10px",
+              padding: "0px 10px",
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                top: 15,
+                bottom: 10,
+                left: 20,
+                width: "1px",
+                height: "80%",
+                backgroundColor: "#8E8B8B ", // Adjust color as needed
+              }}
+            ></span>
+            <span>Total Revenue</span>
+            <Avatar src={Revenue} sx={{ borderRadius: 0, height: 25, width: 25 }} />
+          </div>
+          <Box sx={{ color: "black", ml: 3, display: "flex", gap: 5 }}>
+            Total <span>2348</span>
+          </Box>
+        </Box>
+        {/* 4th Div */}
+        <Box
+          sx={{
+            bgcolor: "white",
+            p: 1,
+            my: 1,
+            mx: 2,
+            borderRadius: "10px",
+            position: "relative",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 5,
+              margin: "10px",
+              padding: "0px 10px",
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                top: 10,
+                bottom: 10,
+                left: 20,
+                width: "1px",
+                height: "80%",
+                backgroundColor: "#8E8B8B ", // Adjust color as needed
+              }}
+            ></span>
+            <span>Total Campaigns</span>
+            <Avatar src={Campaigns} sx={{ borderRadius: 0, height: 25, width: 25 }} />
+          </div>
+          <Box sx={{ color: "black", ml: 3, display: "flex", gap: 5 }}>
+            Total <span>2348</span>
+          </Box>
+        </Box>
+        {/* 5th Div */}
+        <Box
+          sx={{
+            bgcolor: "white",
+            p: 1,
+            my: 1,
+            mx: 2,
+            borderRadius: "10px",
+            position: "relative",
+          }}
+        >
+          <div
+            style={{
+              gap: 5,
+              margin: "10px",
+              padding: "0px 10px",
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                top: 10,
+                bottom: 10,
+                left: 20,
+                width: "1px",
+                height: "80%",
+                backgroundColor: "#8E8B8B", // Adjust color as needed
+              }}
+            ></span>
+            <span>Search by date</span>
+          </div>
+          <Box sx={{ ml: 3 }}>
+            <TextField
+              type="date"
+              InputProps={{
+                style: {
+                  padding: "16px 2px",
+                  color: "#929292",
+                  background: "none",
+                  height: "1.4375em",
+                  width: "100%",
+                  boxSizing: "", // Remove box-sizing property
+                },
+              }}
+            />
+          </Box>
+        </Box>
+      </Box>
       <div
         style={{
           display: "flex",
